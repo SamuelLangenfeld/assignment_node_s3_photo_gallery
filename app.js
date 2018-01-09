@@ -5,8 +5,6 @@ const LocalStrategy = require("passport-local").Strategy;
 var mongoose = require("mongoose");
 var models = require("./models");
 var User = mongoose.model("User");
-const photos = require("./routers/photos");
-const login = require("./routers/login");
 
 // ----------------------------------------
 // App Variables
@@ -17,8 +15,13 @@ app.locals.appName = "My App";
 // ENV
 // ----------------------------------------
 if (process.env.NODE_ENV !== "production") {
+  console.log("not production");
   require("dotenv").config();
 }
+
+const photos = require("./routers/photos");
+const login = require("./routers/login");
+const users = require("./routers/user");
 
 // ----------------------------------------
 // Body Parser
@@ -91,12 +94,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //passport settings
-const User = require("./models/user");
-const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/photo_gallery");
 
 app.use("/login", login);
 app.use("/photos", photos);
+app.use("/users", users);
 
 app.get("/register", (req, res) => {
   res.render("welcome/login");

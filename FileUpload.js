@@ -36,6 +36,8 @@ FileUploader.upload = file => {
   // file name
   const filename = path.parse(file.name).name;
 
+  console.log(bucket);
+
   return new Promise((resolve, reject) => {
     // Configure the S3 request options
     const options = {
@@ -61,8 +63,9 @@ FileUploader.upload = file => {
         const photos = require(PHOTO_DATA_PATH);
         const photo = {
           url: data.Location,
-          name: data.key
-          
+          name: data.key,
+          user: file.user,
+          timestamp: new Date()
         };
         photos[data.key] = photo;
         _writePhotoDataFile(photos);

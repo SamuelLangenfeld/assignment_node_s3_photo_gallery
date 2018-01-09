@@ -1,5 +1,5 @@
 <header class="page-header">
-  <h1>Users Index</h1>
+  <h1>{{user.username}}</h1>
 </header>
 
 
@@ -10,7 +10,7 @@
   <div class="row">
     {{#each users as |user| }}
       <div class="col-xs-4">
-      <p>Username: {{user.username}}, Email: {{user.email}}
+      <a href="/users/{{user.id}}"><p>Username: {{user.username}}</p></a>
        {{/each}}
       {{/if }}
 

@@ -11,8 +11,15 @@ var passport = require("./../passportConfig");
 // ----------------------------------------
 router.get("/", (req, res) => {
   const photos = require("./../data/photos");
-  console.log(photos);
-  res.render("photos/index", { photos });
+  let photosArray = Object.keys(photos).map(photoKey => {
+    return photos[photoKey];
+  });
+  photosArray.sort(function(a, b) {
+    a = a.timestamp;
+    b = b.timestamp;
+    return a > b ? -1 : a < b ? 1 : 0;
+  });
+  res.render("photos/index", { photos: photosArray });
 });
 
 // ----------------------------------------
@@ -22,42 +29,45 @@ router.get("/new", (req, res) => {
   res.render("photos/new");
 });
 
+router.get("/:name", (req, res) => {
+  const photos = require("./../data/photos");
+  const photo = photos[req.params.name];
+  res.render("photos/photoshow", { photo });
+});
 // ----------------------------------------
 // Create
 // ----------------------------------------
 const mw = FileUpload.single("photo[file]");
-router.post("/", mw, (req, res, next) => {
-
-
-
+router.post("/", mw, async (req, res, next) => {
   if (req.user) {
-    
- 
-  console.log("Files", req.file);
+    console.log("Files", req.file);
 
-  FileUpload.upload({
-    data: req.file.buffer,
-    name: req.file.originalname,
-    mimetype: req.file.mimetype,
-    user: req.user.username
-  })
-    .then(data => {
-      console.log(data);
-      req.flash("success", "Photo created!");
-      res.redirect("/photos");
+    // let user =await User.findById(req.user.id);
+    // user.photos.push(req.file.originalname);
+    // await user.save();
+
+    FileUpload.upload({
+      data: req.file.buffer,
+      name: req.file.originalname,
+      mimetype: req.file.mimetype,
+      user: req.user.username
     })
-    .catch(next);
-
+      .then(data => {
+        console.log(data);
+        req.flash("success", "Photo created!");
+        res.redirect("/photos");
+      })
+      .catch(next);
   } else {
-    req.method="GET"
+    req.method = "GET";
     res.redirect("/login");
+  }
 });
 
 // ----------------------------------------
 // Destroy
 // ----------------------------------------
 router.delete("/:id", (req, res, next) => {
-
   if (req.user) {
     FileUpload.remove(req.params.id)
       .then(() => {
@@ -65,8 +75,9 @@ router.delete("/:id", (req, res, next) => {
       })
       .catch(next);
   } else {
-    req.method="GET"
+    req.method = "GET";
     res.redirect("/login");
+  }
 });
 
 module.exports = router;

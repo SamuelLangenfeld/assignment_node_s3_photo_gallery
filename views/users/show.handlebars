@@ -1,0 +1,25 @@
+<header class="page-header">
+  <h1>{{user.username}}</h1>
+</header>
+
+
+<div class="container">
+  <div class="row">
+    <div class="">
+      <p>Username: {{user.username}}</p>
+    </div>
+
+
+
+      
+  </div>
+  <div class="row">
+   {{#each photos as |photo| }}
+    <div class="col-xs-4">
+     <a href="/photos/{{ photo.name }}" class="">
+      <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
+      </a>
+    </div>
+    {{/each}}
+  </div>
+</div>
