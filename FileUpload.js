@@ -62,6 +62,7 @@ FileUploader.upload = file => {
         const photo = {
           url: data.Location,
           name: data.key
+          
         };
         photos[data.key] = photo;
         _writePhotoDataFile(photos);

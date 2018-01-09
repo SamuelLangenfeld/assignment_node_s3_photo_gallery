@@ -1,0 +1,32 @@
+<header class="page-header">
+  <h1>Users Index</h1>
+</header>
+
+
+{{#if (isEmpty users) }}
+  <p class="text-danger">No Users :(</p>
+{{else }}
+<div class="container">
+  <div class="row">
+    {{#each users as |user| }}
+      <div class="col-xs-4">
+      <p>Username: {{user.username}}, Email: {{user.email}}
+       {{/each}}
+      {{/if }}
+
+      
+      </div>
+  </div>
+  <div class="row">
+   {{#each photos as |photo| }}
+    <div class="col-xs-4">
+     <img src="{{ photo.url }}" alt="Photo" class="img-responsive"></a>
+     <a
+          href="/photos/{{ photo.name }}?_method=delete"
+          class="text-danger">
+          &times;
+        </a>
+    </div>
+    {{/each}}
+  </div>
+  </div>

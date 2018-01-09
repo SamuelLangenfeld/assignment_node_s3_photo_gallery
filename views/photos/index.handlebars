@@ -10,14 +10,19 @@
   <div class="row">
     {{#each photos as |photo key| }}
       <div class="col-xs-4">
+
         <a
           href="/photos/{{ photo.name }}?_method=delete"
           class="text-danger">
           &times;
         </a>
-        <p>{{ photo.name }}</p>
-        <img src="{{ photo.url }}" alt="Photo" class="img-responsive">
+        <a href="/photos/{{ photo.name }}>
+        <img src="{{ photo.url }}" alt="Photo" class="img-responsive"></a>
+        <p>{{photo.name}} <a href="/users/{{username}}<{{username}}</a> </p>
       </div>
     {{/each }}
   </div>
 {{/if }}
+
+
+
