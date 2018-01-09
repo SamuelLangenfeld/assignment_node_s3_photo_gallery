@@ -1,5 +1,12 @@
 const express = require("express");
 const app = express();
+const passport = require("./passportConfig.js");
+const LocalStrategy = require("passport-local").Strategy;
+var mongoose = require("mongoose");
+var models = require("./models");
+var User = mongoose.model("User");
+const photos = require("./routers/photos");
+const login = require("./routers/login");
 
 // ----------------------------------------
 // App Variables
@@ -79,8 +86,50 @@ app.use(morganToolkit());
 // ----------------------------------------
 // Routes
 // ----------------------------------------
-const photosRouter = require("./routers/photos");
-app.use("/", photosRouter);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+//passport settings
+const User = require("./models/user");
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/photo_gallery");
+
+app.use("/login", login);
+app.use("/photos", photos);
+
+app.get("/register", (req, res) => {
+  res.render("welcome/login");
+});
+
+app.post("/register", (req, res, next) => {
+  const { username, password } = req.body;
+  const user = new User({ username, password });
+  user.save((err, user) => {
+    req.login(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+      return res.redirect("/");
+    });
+  });
+});
+
+app.get("/logout", function(req, res) {
+  req.logout();
+  res.redirect("/");
+});
+
+app.get("/", (req, res) => {
+  if (req.user) {
+    console.log(req.user);
+    app.locals.username = req.user.username;
+
+    res.render("welcome/home", { user: req.user });
+  } else {
+    res.redirect("/login");
+  }
+});
 
 // ----------------------------------------
 // Template Engine
